@@ -1,6 +1,6 @@
-# Pax VS Code Extension README
+# Pax VS Code Extension
 
-Welcome to the Pax VS Code extension! This extension aims to streamline the development workflow for developers using the Pax UI engine. Integrate Pax components effortlessly into your native apps and websites.
+This extension aims to streamline Pax development in Visual Studio Code. Integrate Pax components effortlessly into your native apps and websites.
 
 ## Features
 
@@ -47,4 +47,4 @@ Initial release with highlighting, auto-completion, and go-to definition
 - [Pax Official Documentation](https://docs.pax.dev/)
 - [VS Code Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
 
-**Let's create something great!**
+**Let's build something beautiful!**
