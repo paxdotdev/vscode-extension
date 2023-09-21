@@ -22,8 +22,11 @@ Provides go-to definition for Pax components, types and properties.
 
 ## Requirements
 
-- Visual Studio Code 1.80.0 or later
-- Pax CLI installed on your system
+- **Visual Studio Code**: Version 1.80.0 or later
+- **Pax CLI**: Installed on your system. 
+    ```bash
+    cargo add pax-cli
+    ```
 
 ## Extension Settings
 
