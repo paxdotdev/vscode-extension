@@ -1,0 +1,266 @@
+{
+    "fileTypes": [
+        "pax"
+    ],
+    "name": "PAX",
+    "patterns": [
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#tags"
+        },
+        {
+            "include": "#settings"
+        },
+        {
+            "include": "#events"
+        }
+    ],
+    "repository": {
+        "comments": {
+            "applyEndPatternLast": true,
+            "patterns": [
+                {
+                    "name": "comment.line.pax",
+                    "match": "//.*"
+                },
+                {
+                    "name": "comment.block.pax",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "identifier": {
+            "name": "variable.pax",
+            "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)"
+        },
+        "tags": {
+            "name": "meta.tag.pax",
+            "begin": "(<([A-Z][a-zA-Z0-9_]*))",
+            "beginCaptures": {
+                "1": {
+                    "name": "support.class.pax"
+                },
+                "2": {
+                    "name": "support.class.pax"
+                }
+            },
+            "end": "((</\\2>)|(/>))",
+            "endCaptures": {
+                "1": {
+                    "name": "support.class.pax"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#comments"
+                },
+                {
+                    "include": "#tags"
+                },
+                {
+                    "include": "#attributeKeys"
+                },
+                {
+                    "include": "#attributeValues"
+                },
+                {
+                    "name": "support.class.pax",
+                    "match": ">"
+                }
+            ]
+        },
+        "attributeKeys": {
+            "patterns": [
+                {
+                    "include": "#identifier",
+                    "match": "\\s*="
+                }
+            ]
+        },
+        "attributeValues": {
+            "patterns": [
+                {
+                    "include": "#literal_value"
+                },
+                {
+                    "include": "#literal_object"
+                },
+                {
+                    "include": "#identifier"
+                }
+            ]
+        },
+        "literal_value": {
+            "patterns": [
+                {
+                    "include": "#literal_number_with_unit"
+                },
+                {
+                    "include": "#literal_number"
+                },
+                {
+                    "include": "#literal_tuple"
+                },
+                {
+                    "include": "#literal_enum_value"
+                },
+                {
+                    "include": "#literal_boolean"
+                },
+                {
+                    "include": "#string"
+                }
+            ]
+        },
+        "literal_number_with_unit": {
+            "name": "constant.numeric.pax",
+            "match": "\\b\\d+(%|px)"
+        },
+        "literal_number": {
+            "name": "constant.numeric.pax",
+            "match": "\\b\\d+\\b(\\.\\d+)"
+        },
+        "literal_tuple": {
+            "begin": "\\(",
+            "end": "\\)",
+            "patterns": [
+                {
+                    "include": "#literal_value"
+                },
+                {
+                    "name": "punctuation.separator.comma.pax",
+                    "match": ","
+                }
+            ]
+        },
+        "literal_enum_value": {
+            "name": "entity.name.function",
+            "match": "\\b[A-Z][a-zA-Z0-9_]*::[a-zA-Z0-9_]*(\\([a-zA-Z0-9_,]*\\))?"
+        },
+        "literal_boolean": {
+            "name": "constant.language.boolean.pax",
+            "match": "\\b(true|false)\\b"
+        },
+        "string": {
+            "name": "string.quoted.double.pax",
+            "begin": "\"",
+            "end": "\""
+        },
+        "settings": {
+            "name": "keyword.settings.pax",
+            "begin": "@settings\\s*\\{",
+            "end": "\\}",
+            "patterns": [
+                {
+                    "include": "#comments"
+                },
+                {
+                    "include": "#selector_block"
+                }
+            ]
+        },
+        "selector_block": {
+            "patterns": [
+                {
+                    "include": "#selector"
+                },
+                {
+                    "include": "#literal_object"
+                }
+            ]
+        },
+        "selector": {
+            "name": "variable.selector.pax",
+            "match": "([.#])([a-zA-Z0-9_]+)"
+        },
+        "literal_object": {
+            "name": "meta.literal_object.pax",
+            "begin": "\\{",
+            "end": "\\}",
+            "patterns": [
+                {
+                    "include": "#settings_key_value_pair"
+                }
+            ]
+        },
+        "settings_key_value_pair": {
+            "patterns": [
+                {
+                    "include": "#settings_key"
+                },
+                {
+                    "include": "#settings_value"
+                }
+            ]
+        },
+        "settings_key": {
+            "include": "#identifier",
+            "match": "\\s*:\\b"
+        },
+        "settings_value": {
+            "patterns": [
+                {
+                    "include": "#literal_value"
+                },
+                {
+                    "include": "#literal_object"
+                }
+            ]
+        },
+        "events": {
+            "name": "keyword.events.pax",
+            "begin": "@events\\s*\\{",
+            "end": "\\}",
+            "patterns": [
+                {
+                    "include": "#comments"
+                },
+                {
+                    "include": "#events_key_value_pair"
+                }
+            ]
+        },
+        "events_key_value_pair": {
+            "patterns": [
+                {
+                    "include": "#events_key"
+                },
+                {
+                    "include": "#events_value"
+                }
+            ]
+        },
+        "events_key": {
+            "include": "#identifier",
+            "match": "\\s*:"
+        },
+        "events_value": {
+            "patterns": [
+                {
+                    "include": "#literal_function"
+                },
+                {
+                    "include": "#function_list"
+                }
+            ]
+        },
+        "literal_function": {
+            "name": "entity.name.function.pax",
+            "match": "\\b(self\\.)?([a-zA-Z_][a-zA-Z0-9_]*),?"
+        },
+        "function_list": {
+            "name": "meta.function-list.pax",
+            "begin": "\\[",
+            "end": "\\]",
+            "patterns": [
+                {
+                    "include": "#literal_function"
+                }
+            ]
+        }
+    },
+    "scopeName": "source.pax"
+}

@@ -1,0 +1,10 @@
+node_modules
+target/
+out/
+
+
+.DS_Store
+
+## VScode project configuration files
+.vscode/
+
