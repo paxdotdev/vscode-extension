@@ -10,7 +10,8 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "onLanguage:pax"
+    "onLanguage:pax",
+    "onLanguage:rust"
   ],
   "main": "./out/extension.js",
   "contributes": {
