@@ -116,6 +116,7 @@ function delay(ms: number): Promise<void> {
 
 
 async function sendDocumentOpen(document: TextDocument) {
+  console.log('sendDocumentOpen');
     client.sendNotification('textDocument/didOpen', {
       textDocument: {
         uri: document.uri.toString(),
@@ -156,20 +157,47 @@ function sendDocumentChange(event: TextDocumentChangeEvent) {
 }
 
 class PaxCompletionItemProvider implements CompletionItemProvider {
-  provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken): ProviderResult<CompletionItem[] | CompletionList> {
-    // You can use the client here to send a request to the server to get the completion items.
-    // For now, it just returns a static list of items.
-    return [new CompletionItem('CompletionItem1'), new CompletionItem('CompletionItem2')];
+  async provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken): Promise<CompletionItem[] | CompletionList> {
+      const customResponse = await client.sendRequest('pax/getCompletionId', {
+          textDocument: {
+              uri: document.uri.toString(),
+          },
+          position: position
+      });
+
+      // Process customResponse to generate a list of CompletionItems or a CompletionList
+      // Here's a simplified example:
+      // const items = customResponse.customItems.map(item => {
+      //     const completionItem = new CompletionItem(item.label);
+      //     // ... other processing based on your custom response structure ...
+      //     return completionItem;
+      // });
+
+      return [];
   }
 }
 
 class PaxDefinitionProvider implements DefinitionProvider {
-  provideDefinition(document: TextDocument, position: Position, token: CancellationToken): ProviderResult<Definition> {
-    // You can use the client here to send a request to the server to get the definition location.
-    // For now, it just returns an empty array.
-    return [];
+  async provideDefinition(document: TextDocument, position: Position, token: CancellationToken): Promise<Definition> {
+      const customResponse = await client.sendRequest('pax/getDefinitionId', {
+          textDocument: {
+              uri: document.uri.toString(),
+          },
+          position: position
+      });
+
+      // Process customResponse to generate a Definition or array of Location
+      // Here's a simplified example:
+      // const locations = customResponse.customDefinitions.map(def => {
+      //     const location = new Location(Uri.parse(def.uri), def.range);
+      //     // ... other processing based on your custom response structure ...
+      //     return location;
+      // });
+
+      return [];
   }
 }
+
 
 export function deactivate(): Thenable<void> | undefined {
   if (!client) {
