@@ -1,4 +1,3 @@
-import * as path from 'path';
 import { workspace, ExtensionContext, window, languages, Position, CancellationToken, CompletionItemProvider, ProviderResult, CompletionItem, CompletionList, DefinitionProvider, Definition, TextDocument, TextDocumentChangeEvent, Uri, TextEdit, Location, LocationLink, commands, Range, Hover, DefinitionLink, HoverProvider } from 'vscode';
 
 import {
@@ -27,17 +26,24 @@ const EnrichmentRequest = 'pax/enrich';
 let client: LanguageClient;
 let enrichmentProxy: EnrichmentProxy;
 
-export function activate(context: ExtensionContext) {
+async function ensureRustAnalyzerIsReady() {
+  await commands.executeCommand('rust-analyzer.run');
+  await delay(5000);
+}
 
-  console.log('Your extension "pax" is now active!');
+export async function activate(context: ExtensionContext) {
+
+  await ensureRustAnalyzerIsReady();
+  console.log('Your extension "pax" is now active!')
+
   let serverOptions: ServerOptions = {
     run: {
       command: "pax-cli",
-       args: ['lsp']
+      args: ["lsp"],
     },
     debug: {
       command: "pax-cli",
-      args: ['lsp']
+      args: ["lsp"],
     }
   };
   
@@ -119,7 +125,6 @@ function delay(ms: number): Promise<void> {
 
 
 async function sendDocumentOpen(document: TextDocument) {
-  console.log('sendDocumentOpen');
     client.sendNotification('textDocument/didOpen', {
       textDocument: {
         uri: document.uri.toString(),
