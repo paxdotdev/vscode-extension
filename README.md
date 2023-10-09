@@ -42,16 +42,6 @@ This extension contributes the following settings:
 * `pax-extension.enable`: Enable/disable the extension.
 * `pax-extension.autocomplete`: Enable/disable auto-completions for Pax.
 
-## Known Issues
-
-No known issues at this time.
-
-## Release Notes
-
-### 1.0.0
-
-Initial release with highlighting, auto-completion, and go-to definition
-
 ## More Information
 
 - [Pax Official Documentation](https://docs.pax.dev/)

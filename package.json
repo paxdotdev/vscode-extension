@@ -1,7 +1,7 @@
 {
   "name": "pax-vscode-extension",
   "displayName": "Pax",
-  "description": "VS Code language support for Pax",
+  "description": "Language support for Pax",
   "version": "0.3.0",
   "publisher": "pax",
   "repository": {
