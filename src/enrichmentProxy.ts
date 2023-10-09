@@ -1,7 +1,7 @@
 import { commands, Hover, LocationLink, Uri, Position } from "vscode";
 import { SymbolData } from "./extension";
 
-enum EnrichmentType {
+export enum EnrichmentType {
     DEFINITION = "getDefinition",
     HOVER = "getHover"
 }
@@ -80,6 +80,10 @@ class EnrichmentProxy {
 
     private getUniqueId(): number {
         return this.idCounter++;
+    }
+
+    printData(): void {
+        console.log(this.fileMap);
     }
 }
 

@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { workspace, ExtensionContext, window, languages, Position, CancellationToken, CompletionItemProvider, ProviderResult, CompletionItem, CompletionList, DefinitionProvider, Definition, TextDocument, TextDocumentChangeEvent, Uri, TextEdit, Location, LocationLink, commands, Range, Hover } from 'vscode';
+import { workspace, ExtensionContext, window, languages, Position, CancellationToken, CompletionItemProvider, ProviderResult, CompletionItem, CompletionList, DefinitionProvider, Definition, TextDocument, TextDocumentChangeEvent, Uri, TextEdit, Location, LocationLink, commands, Range, Hover, DefinitionLink, HoverProvider } from 'vscode';
 
 import {
   LanguageClient,
@@ -7,7 +7,7 @@ import {
   RequestType,
   ServerOptions,
 } from 'vscode-languageclient/node';
-import EnrichmentProxy, { EnrichParams } from './enrichmentProxy';
+import EnrichmentProxy, { EnrichParams, EnrichmentType } from './enrichmentProxy';
 
 
 export interface SymbolData {
@@ -30,15 +30,17 @@ let enrichmentProxy: EnrichmentProxy;
 export function activate(context: ExtensionContext) {
 
   console.log('Your extension "pax" is now active!');
-
   let serverOptions: ServerOptions = {
     run: {
-      command: path.resolve(__dirname, '../../pax/pax-language-server/target/debug/pax-language-server')
+      command: "pax-cli",
+       args: ['lsp']
     },
     debug: {
-      command: path.resolve(__dirname, '../../pax/pax-language-server/target/debug/pax-language-server'),
+      command: "pax-cli",
+      args: ['lsp']
     }
   };
+  
 
   let outputChannel = window.createOutputChannel('Pax Language Server');
 
@@ -103,6 +105,7 @@ export function activate(context: ExtensionContext) {
     workspace.onDidChangeTextDocument(sendDocumentChange);
     languages.registerCompletionItemProvider({ scheme: 'file', language: 'pax' }, new PaxCompletionItemProvider(), ...['<','.','@',':','=']);
     languages.registerDefinitionProvider({ scheme: 'file', language: 'pax' }, new PaxDefinitionProvider());
+    languages.registerHoverProvider({ scheme: 'file', language: 'pax' }, new PaxHoverProvider());
   });
 
   
@@ -178,25 +181,48 @@ class PaxCompletionItemProvider implements CompletionItemProvider {
 }
 
 class PaxDefinitionProvider implements DefinitionProvider {
-  async provideDefinition(document: TextDocument, position: Position, token: CancellationToken): Promise<Definition> {
-      const customResponse = await client.sendRequest('pax/getDefinitionId', {
-          textDocument: {
-              uri: document.uri.toString(),
-          },
-          position: position
-      });
+  async provideDefinition(document: TextDocument, position: Position, token: CancellationToken): Promise<DefinitionLink[]> {
+    const customResponse = await client.sendRequest<number | null>('pax/getDefinitionId', {
+        textDocument: {
+            uri: document.uri.toString(),
+        },
+        position: position
+    });
 
-      // Process customResponse to generate a Definition or array of Location
-      // Here's a simplified example:
-      // const locations = customResponse.customDefinitions.map(def => {
-      //     const location = new Location(Uri.parse(def.uri), def.range);
-      //     // ... other processing based on your custom response structure ...
-      //     return location;
-      // });
+    if (typeof customResponse === "number") {
+      let path = document.uri.path.toString();
+      console.log(path);
+      console.log(customResponse);
+      enrichmentProxy.printData();
+      let data = enrichmentProxy.getEnrichmentData(path, EnrichmentType.DEFINITION , customResponse);
+      console.log(data);
+      return (data as LocationLink[]);
+    }
 
-      return [];
+    return [];
   }
 }
+
+class PaxHoverProvider implements HoverProvider {
+  async provideHover(document: TextDocument, position: Position, token: CancellationToken): Promise<Hover | undefined> {
+    const customResponse = await client.sendRequest<Hover | null>('pax/getHoverId', {
+        textDocument: {
+            uri: document.uri.toString(),
+        },
+        position: position
+    });
+
+    if (typeof customResponse === "number") {
+      let path = document.uri.path.toString();
+      let data = (enrichmentProxy.getEnrichmentData(path, EnrichmentType.HOVER , customResponse) as Hover[]);
+      if(data.length > 0){
+        return data[0];
+      } 
+    }
+    return;
+  }
+}
+
 
 
 export function deactivate(): Thenable<void> | undefined {
