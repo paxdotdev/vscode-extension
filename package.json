@@ -2,7 +2,7 @@
   "name": "pax-vscode-extension",
   "displayName": "Pax",
   "description": "VS Code language support for Pax",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "publisher": "pax",
   "repository": {
     "type": "git",
@@ -27,17 +27,22 @@
     "languages": [
       {
         "id": "pax",
-        "extensions": [".pax"],
-        "aliases": ["Pax", "pax"]
+        "extensions": [
+          ".pax"
+        ],
+        "aliases": [
+          "Pax",
+          "pax"
+        ]
       }
     ],
     "grammars": [
       {
-          "language": "pax",
-          "scopeName": "source.pax",
-          "path": "./syntaxes/pax.tmLanguage.json"
+        "language": "pax",
+        "scopeName": "source.pax",
+        "path": "./syntaxes/pax.tmLanguage.json"
       }
-  ]
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
