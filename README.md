@@ -2,7 +2,7 @@
 
 This extension aims to streamline Pax development in Visual Studio Code. Integrate Pax components effortlessly into your native apps and websites.
 
-## Features
+## Current Features
 
 ### Syntax Highlighting
 
@@ -12,17 +12,24 @@ Adds syntax highlighting for `.pax` files to make your development faster and mo
 
 Adds error highlighting for `.pax` files to show you compile-time errors in your editor.
 
-### Auto-Completion
-
-Provides auto-completions for Pax components and attributes.
-
 ### Go-to definition
 
 Provides go-to definition for Pax components, types and properties.
 
+### Hover
+
+Provides information on types/components in .pax files
+
+## Upcoming Features
+
+### Auto-Completion
+
+Provides auto-completions for Pax components and attributes.
+
 ## Requirements
 
 - **Visual Studio Code**: Version 1.80.0 or later
+- **[rust-analyzer extension](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)**: [Install extension](vscode:extension/rust-lang.rust-analyzer)
 - **Pax CLI**: Installed on your system. 
     ```bash
     cargo add pax-cli
