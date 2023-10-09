@@ -4,6 +4,7 @@ out/
 
 
 .DS_Store
+*.vsix
 
 ## VScode project configuration files
 .vscode/

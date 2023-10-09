@@ -1,8 +1,16 @@
 {
   "name": "pax-vscode-extension",
-  "displayName": "pax-vscode-extension",
+  "displayName": "Pax",
   "description": "VS Code language support for Pax",
   "version": "0.0.1",
+  "publisher": "pax",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pax-lang/vscode-extension"
+  },
+  "icon": "./icon.png",
+  "homepage": "https://pax.dev",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -15,12 +23,7 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "pax-vscode-extension.helloWorld",
-        "title": "Hello World"
-      }
-    ],
+    "commands": [],
     "languages": [
       {
         "id": "pax",
