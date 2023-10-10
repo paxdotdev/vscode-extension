@@ -28,7 +28,7 @@ let enrichmentProxy: EnrichmentProxy;
 
 async function ensureRustAnalyzerIsReady() {
   await commands.executeCommand('rust-analyzer.run');
-  await delay(5000);
+  await delay(8000);
 }
 
 export async function activate(context: ExtensionContext) {
