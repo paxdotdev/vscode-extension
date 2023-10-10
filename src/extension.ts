@@ -95,7 +95,7 @@ export async function activate(context: ExtensionContext) {
 
     client.onRequest(GetHoverRequest, async (params: SymbolLocationParams) => {
       const uri = Uri.file(params.symbol.uri);
-      const resp: Hover[] = await commands.executeCommand('vscode.executeHoverProvider', uri, params.symbol.position);
+      let resp: Hover[] = await commands.executeCommand('vscode.executeHoverProvider', uri, params.symbol.position);
       return resp
     });
 
@@ -196,12 +196,9 @@ class PaxDefinitionProvider implements DefinitionProvider {
 
     if (typeof customResponse === "number") {
       let path = document.uri.path.toString();
-      console.log(path);
-      console.log(customResponse);
-      enrichmentProxy.printData();
-      let data = enrichmentProxy.getEnrichmentData(path, EnrichmentType.DEFINITION , customResponse);
-      console.log(data);
-      return (data as LocationLink[]);
+      let data = ( enrichmentProxy.getEnrichmentData(path, EnrichmentType.DEFINITION , customResponse) as LocationLink[]);
+      data.forEach((item) => {item.originSelectionRange=undefined;})
+      return data;
     }
 
     return [];
@@ -221,7 +218,7 @@ class PaxHoverProvider implements HoverProvider {
       let path = document.uri.path.toString();
       let data = (enrichmentProxy.getEnrichmentData(path, EnrichmentType.HOVER , customResponse) as Hover[]);
       if(data.length > 0){
-        return data[0];
+        return new Hover(data[0].contents);
       } 
     }
     return;

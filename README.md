@@ -29,8 +29,8 @@ Provides auto-completions for Pax components and attributes.
 ## Requirements
 
 - **Visual Studio Code**: Version 1.80.0 or later
-- **[rust-analyzer extension](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)**: [Install extension](vscode:extension/rust-lang.rust-analyzer)
-- **Pax CLI**: Installed on your system. 
+- **[rust-analyzer extension](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)**: Installed and enabled
+- **Pax CLI**: Installed on your system 
     ```bash
     cargo add pax-cli
     ```

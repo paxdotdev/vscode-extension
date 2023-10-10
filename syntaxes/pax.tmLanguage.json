@@ -8,13 +8,16 @@
             "include": "#comments"
         },
         {
+            "include": "#control_flow"
+        },
+        {
             "include": "#tags"
         },
         {
             "include": "#settings"
         },
         {
-            "include": "#events"
+            "include": "#handlers"
         }
     ],
     "repository": {
@@ -38,39 +41,37 @@
         },
         "tags": {
             "name": "meta.tag.pax",
+            "patterns":[
+                {"include": "#open_self_tag"},
+                {"include": "#close_tag"}
+            ]
+        },
+        "open_self_tag": {
+            "name": "meta.tag.pax",
             "begin": "(<([A-Z][a-zA-Z0-9_]*))",
             "beginCaptures": {
                 "1": {
                     "name": "support.class.pax"
-                },
-                "2": {
-                    "name": "support.class.pax"
                 }
             },
-            "end": "((</\\2>)|(/>))",
+            "end": "/>|>",
             "endCaptures": {
-                "1": {
+                "0": {
                     "name": "support.class.pax"
                 }
             },
             "patterns": [
                 {
-                    "include": "#comments"
-                },
-                {
-                    "include": "#tags"
-                },
-                {
                     "include": "#attributeKeys"
                 },
                 {
                     "include": "#attributeValues"
-                },
-                {
-                    "name": "support.class.pax",
-                    "match": ">"
                 }
             ]
+        },
+        "close_tag": {
+            "name": "support.class.pax",
+            "match": "</[A-Z][a-zA-Z0-9_]*>"
         },
         "attributeKeys": {
             "patterns": [
@@ -83,6 +84,9 @@
         "attributeValues": {
             "patterns": [
                 {
+                    "include": "#expression"
+                },
+                {
                     "include": "#literal_value"
                 },
                 {
@@ -91,6 +95,104 @@
                 {
                     "include": "#identifier"
                 }
+            ]
+        },
+        "expression": {
+            "name": "variable.parameter",
+            "begin": "{",
+            "beginCaptures": {
+                "0": {
+                    "name": "punctuation.section.braces.begin.pax"
+                }
+            },
+            "end": "}",
+            "endCaptures": {
+                "0": {
+                    "name": "punctuation.section.braces.end.pax"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "#expression_body"
+                }
+            ]
+        },
+        "expression_body":{
+            "patterns": [
+                {
+                    "include": "#literal_object"
+                },
+                {
+                    "include": "#xo-range"
+                },
+                {
+                    "include": "#xo-prefix"
+                },
+                {
+                    "include": "#xo-infix"
+                },
+                {
+                    "include": "#xo-list"
+                },
+                {
+                    "include": "#literal_value"
+                },
+                {
+                    "include": "#xo-symbol"
+                }
+            ]
+        },
+        "xo-function-call": {
+            "name": "comment.function.call",
+            "match": "[A-Za-z_][A-Za-z0-9_]*(::[A-Za-z_][A-Za-z0-9_]*)?\\(",
+            "patterns":[
+                {
+                    "include": "#expression_body"
+                }
+            ]
+        },          
+        "xo-range": {
+            "match": "(\\d+)\\.{2}(\\d+)",
+            "captures":{
+                "1":{
+                    "patterns":[
+                        {"include": "#literal_value"}
+                    ]
+                },
+                "2":{
+                    "patterns":[
+                        {"include": "#literal_value"}
+                    ]
+                }
+            },
+            "name": "keyword.list.pax"
+        },
+        "xo-prefix": {
+            "match": "\\b(?:-|!)\\b",
+            "name": "keyword.operator.prefix.pax"
+        },
+        "xo-infix": {
+            "match": "\\+|&&|\\|\\||\\/|\\^|%%|\\*|==|>|>=|<|<=|!=|-|\\?|:",
+            "name": "keyword.infix.pax"
+        },
+        "xo-symbol": {
+            "name": "variable.symbol.pax",
+            "match": "\\b\\$?[A-Za-z_][A-Za-z0-9_]*(\\.[A-Za-z_][A-Za-z0-9_]*)?\\b",
+            "captures": {
+                "0": {
+                    "name": "variable.symbol.pax",
+                    "patterns":[
+                        {"include": "#expression_body"}
+                    ]
+                }
+            }
+        },
+        "xo-list": {
+            "begin": "\\[",
+            "end": "\\]",
+            "contentName": "markup.list.pax",
+            "patterns": [
+                { "include": "#expression_body" }
             ]
         },
         "literal_value": {
@@ -121,12 +223,15 @@
         },
         "literal_number": {
             "name": "constant.numeric.pax",
-            "match": "\\b\\d+\\b(\\.\\d+)"
+            "match": "\\b\\d+(\\.\\d+)?\\b"
         },
         "literal_tuple": {
             "begin": "\\(",
             "end": "\\)",
             "patterns": [
+                {
+                    "include": "#xo-infix"
+                },
                 {
                     "include": "#literal_value"
                 },
@@ -207,37 +312,40 @@
                 },
                 {
                     "include": "#literal_object"
+                },
+                {
+                    "include": "#expression"
                 }
             ]
         },
-        "events": {
-            "name": "keyword.events.pax",
-            "begin": "@events\\s*\\{",
+        "handlers": {
+            "name": "keyword.handlers.pax",
+            "begin": "@handlers\\s*\\{",
             "end": "\\}",
             "patterns": [
                 {
                     "include": "#comments"
                 },
                 {
-                    "include": "#events_key_value_pair"
+                    "include": "#handlers_key_value_pair"
                 }
             ]
         },
-        "events_key_value_pair": {
+        "handlers_key_value_pair": {
             "patterns": [
                 {
-                    "include": "#events_key"
+                    "include": "#handlers_key"
                 },
                 {
-                    "include": "#events_value"
+                    "include": "#handlers_value"
                 }
             ]
         },
-        "events_key": {
+        "handlers_key": {
             "include": "#identifier",
             "match": "\\s*:"
         },
-        "events_value": {
+        "handlers_value": {
             "patterns": [
                 {
                     "include": "#literal_function"
@@ -260,6 +368,51 @@
                     "include": "#literal_function"
                 }
             ]
+        },
+        "control_flow": {
+            "name": "entity.name.section.control.pax",
+            "patterns": [
+                {"include": "#statement_for"},
+                {"include": "#statement_if"},
+                {"include": "#statement_slot"},
+                {"include": "#closing_brace"}
+            ]
+        },
+        "closing_brace": {
+            "name": "keyword.control.brace.end.pax",
+            "match": "}"
+        },        
+        "statement_if": {
+            "name": "keyword.control.if.pax",
+            "begin": "if",
+            "end": "{",
+            "patterns": [
+                {"include": "#expression"}
+            ]
+        },
+        "statement_for": {
+            "name": "meta.control.for.pax",
+            "begin": "for",
+            "beginCaptures":{
+                "0": {
+                    "name": "keyword.control.for.pax"
+                }
+            },
+            "end": "{",
+            "endCaptures":{
+                "0": {
+                    "name": "keyword.control.for.pax"
+                }
+            },
+            "patterns": [
+                {"name": "keyword.control.in.pax", "match": "in"},
+                {"include": "#xo-range"},
+                {"include": "#identifier"}
+            ]
+        },
+        "statement_slot": {
+            "name": "keyword.control.slot.pax",
+            "match": "slot"
         }
     },
     "scopeName": "source.pax"
