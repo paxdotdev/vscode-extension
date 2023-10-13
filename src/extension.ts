@@ -1,4 +1,4 @@
-import { workspace, ExtensionContext, window, languages, Position, CancellationToken, CompletionItemProvider, ProviderResult, CompletionItem, CompletionList, DefinitionProvider, Definition, TextDocument, TextDocumentChangeEvent, Uri, TextEdit, Location, LocationLink, commands, Range, Hover, DefinitionLink, HoverProvider } from 'vscode';
+import { workspace, ExtensionContext, window, languages, Position, CancellationToken, ProviderResult, CompletionItem, CompletionList, DefinitionProvider, Definition, TextDocument, TextDocumentChangeEvent, Uri, TextEdit, Location, LocationLink, commands, Range, Hover, DefinitionLink, HoverProvider, CompletionContext, CompletionItemProvider, SnippetString } from 'vscode';
 
 import {
   LanguageClient,
@@ -47,7 +47,6 @@ export async function activate(context: ExtensionContext) {
     }
   };
   
-
   let outputChannel = window.createOutputChannel('Pax Language Server');
 
   let clientOptions: LanguageClientOptions = {
@@ -109,12 +108,11 @@ export async function activate(context: ExtensionContext) {
     workspace.onDidCloseTextDocument(sendDocumentClose);
     workspace.onDidSaveTextDocument(sendDocumentSave);
     workspace.onDidChangeTextDocument(sendDocumentChange);
-    languages.registerCompletionItemProvider({ scheme: 'file', language: 'pax' }, new PaxCompletionItemProvider(), ...['<','.','@',':','=']);
+    languages.registerCompletionItemProvider({ scheme: 'file', language: 'pax' }, new PaxCompletionItemProvider(), ...['<','.','@',':',"="]);
     languages.registerDefinitionProvider({ scheme: 'file', language: 'pax' }, new PaxDefinitionProvider());
     languages.registerHoverProvider({ scheme: 'file', language: 'pax' }, new PaxHoverProvider());
   });
 
-  
 
   context.subscriptions.push(client.start());
 }
@@ -164,24 +162,26 @@ function sendDocumentChange(event: TextDocumentChangeEvent) {
   });
 }
 
+
 class PaxCompletionItemProvider implements CompletionItemProvider {
-  async provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken): Promise<CompletionItem[] | CompletionList> {
-      const customResponse = await client.sendRequest('pax/getCompletionId', {
-          textDocument: {
-              uri: document.uri.toString(),
-          },
-          position: position
-      });
+  async provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): Promise<CompletionItem[] | CompletionList> {
+    const customResponse: any = await client.sendRequest('textDocument/completion', {
+      textDocument: {
+        uri: document.uri.toString(),
+      },
+      position: position,
+      context: context
+    });
 
-      // Process customResponse to generate a list of CompletionItems or a CompletionList
-      // Here's a simplified example:
-      // const items = customResponse.customItems.map(item => {
-      //     const completionItem = new CompletionItem(item.label);
-      //     // ... other processing based on your custom response structure ...
-      //     return completionItem;
-      // });
-
-      return [];
+    if (customResponse) {
+      for (let item of customResponse) {
+        if (item.insertTextFormat == 2) { 
+          item.insertText = new SnippetString(item.insertText);
+        }
+      }
+      return customResponse as CompletionItem[];
+    }
+    return [];
   }
 }
 

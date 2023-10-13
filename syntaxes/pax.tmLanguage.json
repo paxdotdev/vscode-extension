@@ -219,7 +219,7 @@
         },
         "literal_number_with_unit": {
             "name": "constant.numeric.pax",
-            "match": "\\b\\d+(%|px)"
+            "match": "\\b\\d+(%|px|deg|rad)"
         },
         "literal_number": {
             "name": "constant.numeric.pax",
