@@ -20,11 +20,9 @@ Provides go-to definition for Pax components, types and properties.
 
 Provides information on types/components in .pax files
 
-## Upcoming Features
-
 ### Auto-Completion
 
-Provides auto-completions for Pax components and attributes.
+Provides auto-completion within .pax files
 
 ## Requirements
 

@@ -84,13 +84,13 @@
         "attributeValues": {
             "patterns": [
                 {
+                    "include": "#literal_object"
+                },
+                {
                     "include": "#expression"
                 },
                 {
                     "include": "#literal_value"
-                },
-                {
-                    "include": "#literal_object"
                 },
                 {
                     "include": "#identifier"
@@ -282,7 +282,7 @@
             "match": "([.#])([a-zA-Z0-9_]+)"
         },
         "literal_object": {
-            "name": "meta.literal_object.pax",
+            "name": "variable.literal_object.pax",
             "begin": "\\{",
             "end": "\\}",
             "patterns": [

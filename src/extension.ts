@@ -108,7 +108,7 @@ export async function activate(context: ExtensionContext) {
     workspace.onDidCloseTextDocument(sendDocumentClose);
     workspace.onDidSaveTextDocument(sendDocumentSave);
     workspace.onDidChangeTextDocument(sendDocumentChange);
-    languages.registerCompletionItemProvider({ scheme: 'file', language: 'pax' }, new PaxCompletionItemProvider(), ...['<','.','@',':',"="]);
+    languages.registerCompletionItemProvider({ scheme: 'file', language: 'pax' }, new PaxCompletionItemProvider(), ...['<','.','@',':',"=","#"]);
     languages.registerDefinitionProvider({ scheme: 'file', language: 'pax' }, new PaxDefinitionProvider());
     languages.registerHoverProvider({ scheme: 'file', language: 'pax' }, new PaxHoverProvider());
   });
